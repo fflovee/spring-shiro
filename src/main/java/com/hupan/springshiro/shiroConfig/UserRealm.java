@@ -17,8 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  **/
 public class UserRealm extends AuthorizingRealm {
 
-    @Autowired
-    private UserService userService;
+
 
     // 执行授权逻辑
     @Override
@@ -27,16 +26,20 @@ public class UserRealm extends AuthorizingRealm {
         return null;
     }
 
+    @Autowired
+    private UserService userService;
+
     // 执行认证逻辑
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
         System.out.println("执行认证逻辑");
 
-        String name = "zhangsan";
-        String password = "123456";
         UsernamePasswordToken token = (UsernamePasswordToken) authenticationToken;
 
-        User user = userService.selectUser(token.getUsername());
+        String name = token.getUsername();
+
+
+        User user = userService.selectUser(name);
 
         if (user==null)
             return null;

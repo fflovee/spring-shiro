@@ -1,10 +1,12 @@
 package com.hupan.springshiro.controller;
 
+import com.hupan.springshiro.service.UserService;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,13 +16,16 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  * @ClassName HelloController
- * @Description TODO
+ * @Description HelloController
  * @Author hupan
  * @Date 2019/10/30 13:20
  * @Version 1.0
  **/
 @Controller
 public class HelloController {
+
+    @Autowired
+    private UserService userService;
 
     @ResponseBody
     @GetMapping("/hello")

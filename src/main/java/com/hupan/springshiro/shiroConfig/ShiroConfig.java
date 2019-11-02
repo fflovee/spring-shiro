@@ -18,12 +18,13 @@ import java.util.Map;
  **/
 @Configuration
 public class ShiroConfig {
-    // 创建ShiroFilterFactorBean
+    // 创建ShiroFilterFactorBean  @Qualifier("securityManager") DefaultWebSecurityManager securityManager
     @Bean
     public ShiroFilterFactoryBean getShiroFilterFactoryBean(@Qualifier("securityManager") DefaultWebSecurityManager securityManager) {
         ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
         // 设置安全管理器
         shiroFilterFactoryBean.setSecurityManager(securityManager);
+        shiroFilterFactoryBean.setLoginUrl("/toLogin");
         /* 添加shiro内置过滤器
          shiro内置过滤器,可以实现权限等相关的拦截器
          常用的过滤器:
@@ -32,29 +33,29 @@ public class ShiroConfig {
          user: 如果使用rememberMe的功能可以直接访问
          perms: 该资源必须得到资源权限才可以访问
          role: 该资源必须得到角色权限才可以访问*/
-        Map<String,String> FilterMap = new LinkedHashMap<>();
-        FilterMap.put("/add","authc");
-        FilterMap.put("/update","authc");
-        // 改为通配的方式
-        FilterMap.put("/testThyme","anon");
-        FilterMap.put("/login","anon");
-        shiroFilterFactoryBean.setLoginUrl("/toLogin");
-        shiroFilterFactoryBean.setFilterChainDefinitionMap(FilterMap);
+        Map<String, String> filterMap = new LinkedHashMap<>();
+
+        filterMap.put("/testThyme", "anon");
+        filterMap.put("/login", "anon");
+
+        filterMap.put("/add", "authc");
+        filterMap.put("/update", "authc");
+
+        shiroFilterFactoryBean.setFilterChainDefinitionMap(filterMap);
         return shiroFilterFactoryBean;
     }
 
-    // 创建DefaultWebSecurityManager
     @Bean(name = "securityManager")
-    public DefaultWebSecurityManager getDefaultWebSecurityManager(@Qualifier("userRealm") UserRealm userRealm) {
+    public DefaultWebSecurityManager getSecurityManager(@Qualifier("realm") UserRealm userRealm) {
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
-        // 关联realm
         securityManager.setRealm(userRealm);
         return securityManager;
     }
 
-    // 创建Realm
-    @Bean(name = "userRealm")
-    public UserRealm getRealm() {
+    // 创建Realm (name = "userRealm")
+    @Bean(name = "realm")
+    public UserRealm realm() {
         return new UserRealm();
     }
+
 }
